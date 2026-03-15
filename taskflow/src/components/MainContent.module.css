@@ -1,40 +1,59 @@
 .main {
   flex: 1;
-  padding: 20px;
+  padding: 24px 32px 32px 32px;
   background-color: #f4f7f6;
-  overflow-y: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
 }
 
 .board {
   display: flex;
   gap: 20px;
+  height: 100%;
   align-items: flex-start;
 }
 
 .column {
-  background-color: #ebedf0;
-  border-radius: 8px;
+  background-color: #ebedef;
+  border-radius: 10px;
   width: 300px;
-  padding: 10px;
-  min-height: 100px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  padding: 8px;
 }
 
 .colTitle {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 1.1rem;
-  color: #333;
+  padding: 12px 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
 }
 
 .card {
   background-color: white;
-  border-radius: 4px;
-  padding: 10px;
   margin-bottom: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+  padding: 14px;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  font-size: 0.9rem;
+  color: #333;
+  cursor: grab;
+  transition: all 0.2s ease;
+  border: 1px solid #e1e4e8;
 }
 
 .card:hover {
-  background-color: #fafafa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-color: #1b8c3e;
+}
+
+.card:active {
+  cursor: grabbing;
 }
