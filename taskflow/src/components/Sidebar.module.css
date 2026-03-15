@@ -41,7 +41,9 @@
 .item {
   display: flex;
   align-items: center;
+  gap: 12px;
   padding: 12px 14px;
+  text-decoration: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -54,6 +56,16 @@
 .item:hover {
   background-color: #34495e;
   transform: translateX(4px);
+}
+
+.active {
+  background-color: #e8f5e9; /* Fond vert clair */
+  color: #1b5e20; /* Texte vert foncé */
+  font-weight: 600;
+}
+
+.active .dot {
+  box-shadow: 0 0 8px rgba(27, 140, 62, 0.4);
 }
 
 .dot {
