@@ -53,7 +53,7 @@ setSaving(false);
 }
 }
 // PUT — renommer un projet
-async function renameProject(project: Project) {
+async function renameProject(project: Project) {  
   const newName = prompt('Nouveau nom :', project.name);
   if (newName && newName.trim() !== '' && newName !== project.name) {
     setSaving(true);
