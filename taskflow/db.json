@@ -44,6 +44,11 @@
       "id": "8f95",
       "name": "aa",
       "color": "#3498db"
+    },
+    {
+      "id": "4649",
+      "name": "test",
+      "color": "#a06754"
     }
   ],
   "columns": [
