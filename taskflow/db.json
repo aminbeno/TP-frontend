@@ -22,7 +22,7 @@
   "projects": [
     {
       "id": "1",
-      "name": "Site E-commerce",
+      "name": "Site ",
       "color": "#e74c3c"
     },
     {
@@ -49,6 +49,16 @@
       "id": "4649",
       "name": "test",
       "color": "#a06754"
+    },
+    {
+      "id": "ad02",
+      "name": "test",
+      "color": "#3498db"
+    },
+    {
+      "id": "13ef",
+      "name": "test",
+      "color": "#3498db"
     }
   ],
   "columns": [
