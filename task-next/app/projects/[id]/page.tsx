@@ -5,12 +5,12 @@ interface Project {
 }
 
 interface Props {
-  params: { id: string }; // params n'est pas une Promise ici car on l'attend directement
+  params: Promise<{ id: string }>;
 }
 
 export default async function ProjectPage({ params }: Props) {
-  const { id } = params;
-  const res = await fetch(`http://localhost:4000/projects/${id}`, {
+  const { id } = await params;
+  const res = await fetch(`http://localhost:3000/api/projects/${id}`, {
     cache: 'no-store'
   });
 

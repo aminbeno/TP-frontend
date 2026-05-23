@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../api/axios';
 import axios from 'axios';
 
@@ -29,7 +29,7 @@ export default function useProjects() {
     fetchData();
   }, []);
 
-  const addProject = useCallback(async (name: string, color: string) => {
+  async function addProject(name: string, color: string) {
     setError(null);
     try {
       const { data } = await api.post('/projects', { name, color });
@@ -37,9 +37,9 @@ export default function useProjects() {
     } catch (err) {
       if (axios.isAxiosError(err)) setError(`Erreur: ${err.response?.status}`);
     }
-  }, []);
+  }
 
-  const renameProject = useCallback(async (project: Project) => {
+  async function renameProject(project: Project) {
     const newName = prompt('Nouveau nom :', project.name);
     if (!newName || newName === project.name) return;
     try {
@@ -50,9 +50,9 @@ export default function useProjects() {
     } catch (err) {
       if (axios.isAxiosError(err)) setError(`Erreur: ${err.response?.status}`);
     }
-  }, []);
+  }
 
-  const deleteProject = useCallback(async (id: string) => {
+  async function deleteProject(id: string) {
     if (!confirm('Êtes-vous sûr ?')) return;
     try {
       await api.delete(`/projects/${id}`);
@@ -60,7 +60,6 @@ export default function useProjects() {
     } catch (err) {
       if (axios.isAxiosError(err)) setError(`Erreur: ${err.response?.status}`);
     }
-  }, []);
-
+  }
   return { projects, columns, loading, error, addProject, renameProject, deleteProject };
 }
