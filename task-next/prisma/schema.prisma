@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id        Int      @id @default(autoincrement())
+  name      String
+  color     String   @default("#3498db")
+  createdAt DateTime @default(now())
+  userId    Int?     // Ajout pour l'association avec User
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
+  password String
+  name     String
+  projects Project[] // Relation avec les projets
+}

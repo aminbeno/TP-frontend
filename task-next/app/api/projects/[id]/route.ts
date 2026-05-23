@@ -1,44 +1,31 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const DB_PATH = path.join(process.cwd(), 'db.json');
-
-interface Project {
-  id: string;
-  name: string;
-  color: string;
-}
-
-interface DB {
-  projects: Project[];
-}
-
-function readDB(): DB {
-  if (!fs.existsSync(DB_PATH)) {
-    fs.writeFileSync(DB_PATH, JSON.stringify({ projects: [] }, null, 2));
-  }
-  const data = fs.readFileSync(DB_PATH, 'utf-8');
-  return JSON.parse(data);
-}
-
-function writeDB(data: DB) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-}
+import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params;
-  const db = readDB();
-  const project = db.projects.find(p => p.id === id);
+  try {
+    const { id } = await context.params;
+    const projectId = parseInt(id, 10);
 
-  if (project) {
+    if (isNaN(projectId)) {
+      return NextResponse.json({ message: 'ID de projet invalide' }, { status: 400 });
+    }
+
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+
+    if (!project) {
+      return NextResponse.json({ message: 'Projet non trouvé' }, { status: 404 });
+    }
+
     return NextResponse.json(project);
-  } else {
-    return NextResponse.json({ message: 'Project not found' }, { status: 404 });
+  } catch (error) {
+    console.error('GET Project Error:', error);
+    return NextResponse.json({ message: 'Erreur lors de la récupération' }, { status: 500 });
   }
 }
 
@@ -46,21 +33,28 @@ export async function PUT(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params;
-  const body = await request.json();
-  const db = readDB();
-  const projectIndex = db.projects.findIndex(p => p.id === id);
+  try {
+    const { id } = await context.params;
+    const projectId = parseInt(id, 10);
 
-  if (projectIndex !== -1) {
-    db.projects[projectIndex] = {
-      ...db.projects[projectIndex],
-      name: body.name,
-      color: body.color || db.projects[projectIndex].color,
-    };
-    writeDB(db);
-    return NextResponse.json(db.projects[projectIndex]);
-  } else {
-    return NextResponse.json({ message: 'Project not found' }, { status: 404 });
+    if (isNaN(projectId)) {
+      return NextResponse.json({ message: 'ID de projet invalide' }, { status: 400 });
+    }
+
+    const body = await request.json();
+
+    const updatedProject = await prisma.project.update({
+      where: { id: projectId },
+      data: {
+        name: body.name,
+        color: body.color,
+      },
+    });
+
+    return NextResponse.json(updatedProject);
+  } catch (error) {
+    console.error('PUT Project Error:', error);
+    return NextResponse.json({ message: 'Erreur lors de la mise à jour' }, { status: 500 });
   }
 }
 
@@ -68,15 +62,21 @@ export async function DELETE(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params;
-  const db = readDB();
-  const initialLength = db.projects.length;
-  db.projects = db.projects.filter(p => p.id !== id);
+  try {
+    const { id } = await context.params;
+    const projectId = parseInt(id, 10);
 
-  if (db.projects.length < initialLength) {
-    writeDB(db);
-    return NextResponse.json({ message: 'Project deleted' }, { status: 200 });
-  } else {
-    return NextResponse.json({ message: 'Project not found' }, { status: 404 });
+    if (isNaN(projectId)) {
+      return NextResponse.json({ message: 'ID de projet invalide' }, { status: 400 });
+    }
+
+    await prisma.project.delete({
+      where: { id: projectId },
+    });
+
+    return NextResponse.json({ message: 'Projet supprimé' });
+  } catch (error) {
+    console.error('DELETE Project Error:', error);
+    return NextResponse.json({ message: 'Erreur lors de la suppression' }, { status: 500 });
   }
 }
